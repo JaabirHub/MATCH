@@ -1,7 +1,13 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
+/**
+ * This class represents the attributes of a user.
+ */
 @Entity()
 export class User {
+  /**
+   * This generates the id for us automatically.
+   */
   @PrimaryGeneratedColumn()
   public id: number;
 
@@ -14,12 +20,16 @@ export class User {
   @Column()
   public city: string;
 
+  /**
+   * No args constructor.
+   */
   constructor() {
     this.name = '';
     this.interests = [];
     this.city = '';
   }
 
+  //Getters and Setters for class attributes.
   public getId(): number {
     return this.id;
   }
