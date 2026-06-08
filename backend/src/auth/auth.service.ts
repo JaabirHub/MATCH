@@ -49,7 +49,6 @@ export class AuthService {
   }
 
   private signTokens(user: User) {
-    console.log('Signing with secret:', this.jwtService);
     const payload = { sub: user.id, email: user.email };
     return {
       accessToken: this.jwtService.sign(payload, { expiresIn: '15m' }),
