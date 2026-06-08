@@ -148,21 +148,57 @@ Create `frontend/.env` visit frontend/.env.example:
 
 (Adjust ports to match your backend config.)
 
-### Running the database
+### Running with Docker Compose
 
-Using Docker Compose from the repo root:
+This project is designed to run locally using Docker Compose for both the database and the app services.
+
+From the repo root:
 
 ```bash
 docker compose up -d
 ```
 
-This will start a Postgres container with the database configured in `docker-compose.yml`.
+- `docker compose up` will build any missing images (if a `build:` section is defined for a service) and then start the containers.[web:211][web:215]  
+- The `-d` flag runs everything in the background (detached mode).
+
+This will start:
+
+- A PostgreSQL container with the database configured in `docker-compose.yml`.  
+- A backend service container (NestJS API).  
+- A frontend service container (Next.js app).
+
+Once the containers are up:
+
+- Backend is available at the port you mapped in `docker-compose.yml` (for example `http://localhost:3001`).  
+- Frontend is available at its mapped port (for example `http://localhost:3000`), and it talks to the backend via the `NEXT_PUBLIC_API_URL` environment variable.
 
 ---
 
-## Running the app
+### Building Docker images
 
-From the repo root:
+If you change a Dockerfile or anything in the build context for a service, you should rebuild the images.
+
+**Build all service images without starting containers:**
+
+```bash
+docker compose build
+```
+
+This reads `docker-compose.yml`, finds all services with a `build:` section, and builds their images.[web:214][web:216]
+
+**Build and start in one step (common during development):**
+
+```bash
+docker compose up -d --build
+```
+
+- `--build` forces Docker Compose to rebuild images before starting the containers, so your changes in the Dockerfiles or source code are reflected in the new containers.[web:211][web:217]
+
+---
+
+### Running the app without Docker (optional)
+
+You can still run services directly on your machine if you prefer:
 
 - **Backend (NestJS)**
 
@@ -180,7 +216,7 @@ From the repo root:
   npm run dev
   ```
 
-The frontend will talk to the backend via `NEXT_PUBLIC_API_URL`.
+The frontend will talk to the backend via `NEXT_PUBLIC_API_URL` when running locally.
 
 If you have a root `package.json`, you can also add helper scripts such as:
 
@@ -193,7 +229,6 @@ If you have a root `package.json`, you can also add helper scripts such as:
   }
 }
 ```
-
 ---
 
 ## Scripts
