@@ -1,3 +1,7 @@
 export enum Availability {
-  MORNING, AFTERNOON, EVENING, NIGHT, ANYTIME
+  MORNING,
+  AFTERNOON,
+  EVENING,
+  NIGHT,
+  ANYTIME,
 }
