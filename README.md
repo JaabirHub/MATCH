@@ -142,9 +142,7 @@ friend-matching-app/
 
 ### Environment variables
 
-Create `backend/.env` visit backend/.env.example:
-
-Create `frontend/.env` visit frontend/.env.example:
+Create `.env` at the project root. Visit `.env.example` for a template. 
 
 (Adjust ports to match your backend config.)
 
