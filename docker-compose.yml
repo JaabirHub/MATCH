@@ -8,7 +8,7 @@ services:
       - "3000:3000"
     environment:
       # Your Next.js app can use this to call the backend
-      NEXT_PUBLIC_API_URL: http://backend:3001
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
     depends_on:
       - backend
 
@@ -25,7 +25,8 @@ services:
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
       DB_NAME: ${DB_NAME}
-      PORT: 3001
+      BACKENDPORT: 3001
+      JWT_SECRET: ${JWT_SECRET}
     depends_on:
       - postgres
 
