@@ -6,32 +6,43 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/user/user.entity';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { RegisterDTO } from './dto/register.dto';
 import * as bcrypt from 'bcrypt';
+import { Profile } from 'src/profile/profile.entity';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User)
     private readonly userRepo: Repository<User>,
+    @InjectRepository(Profile)
+    private readonly profileRepo: Repository<Profile>,
+    private readonly dataSource: DataSource,
     private readonly jwtService: JwtService,
   ) {}
 
   async register(dto: RegisterDTO) {
-    const existing = await this.userRepo.findOne({
-      where: { email: dto.email },
-    });
-    if (existing) throw new ConflictException('Email Already In Use');
+    return this.dataSource.transaction(async (manager) => {
+      const existing = await manager.findOne(User, {
+        where: { email: dto.email },
+      });
+      if (existing) throw new ConflictException('Email Already In Use');
 
-    const passwordHash = await bcrypt.hash(dto.password, 12);
-    const user = this.userRepo.create({
-      email: dto.email,
-      name: dto.name,
-      passwordHash,
+      const passwordHash = await bcrypt.hash(dto.password, 12);
+      const user = this.userRepo.create({
+        email: dto.email,
+        name: dto.name,
+        passwordHash,
+      });
+      await manager.save(user);
+
+      const profile = manager.create(Profile);
+      profile.user = user;
+      profile.nickname = dto.name;
+      await manager.save(profile);
+      return this.signTokens(user);
     });
-    await this.userRepo.save(user);
-    return this.signTokens(user);
   }
 
   async validateUser(email: string, password: string): Promise<User> {

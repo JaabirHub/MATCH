@@ -6,6 +6,8 @@ import { User } from './user/user.entity';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { Profile } from './profile/profile.entity';
+import { ProfileModule } from './profile/profile.module';
 
 @Module({
   imports: [
@@ -20,11 +22,12 @@ import { AuthModule } from './auth/auth.module';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [User],
+      entities: [User, Profile],
       synchronize: true,
     }),
     UserModule,
     AuthModule,
+    ProfileModule,
   ],
   controllers: [AppController],
   providers: [AppService],
