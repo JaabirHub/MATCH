@@ -1,4 +1,5 @@
-import { IsArray, IsOptional, IsString, MinLength } from 'class-validator';
+import { IsArray, IsEnum, IsOptional, IsString, MinLength } from 'class-validator';
+import { Interest } from '../profile-interest.enum';
 
 export class ProfileDTO {
   @IsOptional()
@@ -13,8 +14,8 @@ export class ProfileDTO {
 
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
-  interests: string[];
+  @IsEnum(Interest, { each: true })
+  interests: Interest[];
 
   @IsOptional()
   @IsString()

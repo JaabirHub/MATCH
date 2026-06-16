@@ -1,5 +1,6 @@
 import { User } from 'src/user/user.entity';
 import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm';
+import { Interest } from './profile-interest.enum';
 
 @Entity()
 export class Profile {
@@ -12,8 +13,8 @@ export class Profile {
   @Column({ type: 'text' })
   description: string;
 
-  @Column('text', { array: true })
-  interests: string[];
+  @Column({ type: 'simple-array'})
+  interests: Interest[];
 
   @Column({ type: 'text' })
   city: string;
