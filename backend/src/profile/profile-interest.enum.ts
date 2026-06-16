@@ -1,0 +1,17 @@
+export enum Interest {
+  GYM = 'gym',
+  GAMING = 'gaming',
+  MUSIC = 'music',
+  SPORTS = 'sports',
+  FASHION = 'fashion',
+  OUTDOORS = 'activities',
+  SELF_EXPRESSION = 'self_expression',
+  NIGHT_LIFE = 'night_life',
+  MOVIES = 'movies',
+  TV_SERIES = 'tv_series',
+  ANIME = 'anime',
+  MANGA = 'manga',
+  CARTOONS = 'cartoons',
+  BOOKS = 'books',
+  ART = 'art',
+}
