@@ -8,6 +8,7 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { Profile } from './profile/profile.entity';
 import { ProfileModule } from './profile/profile.module';
+import { MatchingModule } from './matching/matching.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { ProfileModule } from './profile/profile.module';
     UserModule,
     AuthModule,
     ProfileModule,
+    MatchingModule
   ],
   controllers: [AppController],
   providers: [AppService],
