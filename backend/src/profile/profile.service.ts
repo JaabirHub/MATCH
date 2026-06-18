@@ -8,7 +8,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 export class ProfileService {
   constructor(
     @InjectRepository(Profile)
-    private readonly profileRepo: Repository<Profile>) {}
+    private readonly profileRepo: Repository<Profile>,
+  ) {}
 
   getAll() {
     return this.profileRepo.find();

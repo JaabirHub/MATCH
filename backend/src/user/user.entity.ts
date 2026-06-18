@@ -9,14 +9,8 @@ import {
 import { UserStatus } from './user.status';
 import { Profile } from 'src/profile/profile.entity';
 
-/**
- * This class represents the attributes of a user.
- */
 @Entity()
 export class User {
-  /**
-   * This generates the id for us automatically.
-   */
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -41,9 +35,6 @@ export class User {
   @OneToOne(() => Profile)
   profile: Profile;
 
-  /**
-   * No args constructor.
-   */
   constructor() {
     this.name = '';
   }

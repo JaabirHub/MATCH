@@ -9,6 +9,8 @@ import { AuthModule } from './auth/auth.module';
 import { Profile } from './profile/profile.entity';
 import { ProfileModule } from './profile/profile.module';
 import { MatchingModule } from './matching/matching.module';
+import { ConnectionModule } from './connection/connection.module';
+import { Connection } from './connection/connection.entity';
 
 @Module({
   imports: [
@@ -23,13 +25,14 @@ import { MatchingModule } from './matching/matching.module';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [User, Profile],
+      entities: [User, Profile, Connection],
       synchronize: true,
     }),
     UserModule,
     AuthModule,
     ProfileModule,
-    MatchingModule
+    MatchingModule,
+    ConnectionModule,
   ],
   controllers: [AppController],
   providers: [AppService],

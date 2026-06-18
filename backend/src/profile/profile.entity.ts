@@ -1,10 +1,16 @@
 import { User } from 'src/user/user.entity';
-import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Interest } from './profile-interest.enum';
 
 @Entity()
 export class Profile {
-  @PrimaryColumn('uuid')
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()
@@ -13,7 +19,7 @@ export class Profile {
   @Column({ type: 'text' })
   description: string;
 
-  @Column({ type: 'simple-array'})
+  @Column({ type: 'simple-array' })
   interests: Interest[];
 
   @Column({ type: 'text' })
