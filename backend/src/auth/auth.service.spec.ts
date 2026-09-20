@@ -23,7 +23,9 @@ const mockManager = {
   save: jest.fn(),
 };
 const mockDataSource = {
-  transaction: jest.fn((cb: (manager: typeof mockManager) => Promise<unknown>) => cb(mockManager)),
+  transaction: jest.fn(
+    (cb: (manager: typeof mockManager) => Promise<unknown>) => cb(mockManager),
+  ),
 };
 
 const mockUser: User = {

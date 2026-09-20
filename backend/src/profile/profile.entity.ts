@@ -19,7 +19,10 @@ export class Profile {
   @Column({ type: 'text' })
   description: string;
 
-  @Column({ type: 'simple-array' })
+  @Column({ 
+    type: 'simple-array',
+    default: '',
+  })
   interests: Interest[];
 
   @Column({ type: 'text' })

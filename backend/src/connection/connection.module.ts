@@ -9,5 +9,6 @@ import { ConnectionController } from './connection.controller';
   imports: [TypeOrmModule.forFeature([User, Connection])],
   providers: [ConnectionService],
   controllers: [ConnectionController],
+  exports: [ConnectionService],
 })
 export class ConnectionModule {}
