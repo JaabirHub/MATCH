@@ -19,7 +19,7 @@ export class Profile {
   @Column({ type: 'text' })
   description: string;
 
-  @Column({ 
+  @Column({
     type: 'simple-array',
     default: '',
   })
