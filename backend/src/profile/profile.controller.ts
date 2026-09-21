@@ -22,9 +22,9 @@ interface RequestWithUser extends ExpressRequest {
 export class ProfileController {
   constructor(private readonly profileService: ProfileService) {}
 
-  @Get()
-  getAll() {
-    return this.profileService.getAll();
+  @Get('me')
+  getMyProfile(@Request() req: RequestWithUser) {
+    return this.profileService.getProfileById(req.user.id);
   }
 
   @Get(':id')
