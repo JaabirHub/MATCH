@@ -1,18 +1,22 @@
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3001';
+const BACKEND_URL =
+  process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3001';
 
-if (!BACKEND_URL) {
-  throw new Error('NEXT_PUBLIC_BACKEND_URL is not configured');
+export interface ApiOptions extends RequestInit {
+  token?: string;
 }
 
 export async function api<T>(
   path: string,
-  options: RequestInit = {},
+  options: ApiOptions = {},
 ): Promise<T> {
+  const { token, headers, ...fetchOptions } = options;
+
   const response = await fetch(`${BACKEND_URL}${path}`, {
-    ...options,
+    ...fetchOptions,
     headers: {
       'Content-Type': 'application/json',
-      ...options.headers,
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...headers,
     },
   });
 
