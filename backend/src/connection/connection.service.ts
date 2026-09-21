@@ -25,32 +25,71 @@ export class ConnectionService {
     return user;
   }
 
-  async sendRequest(senderId: string, receiverId: string): Promise<Connection> {
+  async sendRequest(
+    senderId: string,
+    receiverId: string,
+  ): Promise<Connection> {
     if (senderId === receiverId) {
       throw new BadRequestException('Cannot send request to yourself');
     }
-
+  
+    const sender = await this.getValidUser(senderId);
     const receiver = await this.getValidUser(receiverId);
-
+  
     const existing = await this.connectionRepo.findOne({
       where: [
-        { sender: { id: senderId }, receiver: { id: receiverId } },
-        { sender: { id: receiverId }, receiver: { id: senderId } },
+        {
+          sender: { id: senderId },
+          receiver: { id: receiverId },
+        },
+        {
+          sender: { id: receiverId },
+          receiver: { id: senderId },
+        },
       ],
+      relations: {
+        sender: true,
+        receiver: true,
+      },
     });
-
-    if (existing) throw new BadRequestException('Connection already exists');
-
-    const sender = await this.getValidUser(senderId);
-
-    const connection = this.connectionRepo.create({
-      sender,
-      receiver,
-      connectionStatus: ConnectionStatus.PENDING,
-    });
-
-    return this.connectionRepo.save(connection);
-  }
+  
+    if (!existing) {
+      const connection = this.connectionRepo.create({
+        sender,
+        receiver,
+        connectionStatus: ConnectionStatus.PENDING,
+      });
+  
+      return this.connectionRepo.save(connection);
+    }
+  
+    if (existing.connectionStatus === ConnectionStatus.PENDING) {
+      if (existing.sender.id === receiverId) {
+        existing.connectionStatus = ConnectionStatus.ACCEPTED;
+        return this.connectionRepo.save(existing);
+      }
+  
+      throw new BadRequestException('Connection request is already pending');
+    }
+  
+    if (existing.connectionStatus === ConnectionStatus.ACCEPTED) {
+      throw new BadRequestException('You are already connected');
+    }
+  
+    if (existing.connectionStatus === ConnectionStatus.BLOCKED) {
+      throw new BadRequestException('This connection is blocked');
+    }
+  
+    if (existing.connectionStatus === ConnectionStatus.DECLINED) {
+      existing.sender = sender;
+      existing.receiver = receiver;
+      existing.connectionStatus = ConnectionStatus.PENDING;
+  
+      return this.connectionRepo.save(existing);
+    }
+  
+    throw new BadRequestException('Connection already exists');
+  }  
 
   async acceptRequest(
     userId: string,
