@@ -1,4 +1,4 @@
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3001';
 
 if (!BACKEND_URL) {
   throw new Error('NEXT_PUBLIC_BACKEND_URL is not configured');
