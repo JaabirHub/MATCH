@@ -51,7 +51,10 @@ export default function ProfilePage() {
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [statusMessage, setStatusMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [statusMessage, setStatusMessage] = useState<{
+    type: 'success' | 'error';
+    text: string;
+  } | null>(null);
 
   useEffect(() => {
     if (token === null && typeof window !== 'undefined') {
@@ -62,30 +65,37 @@ export default function ProfilePage() {
       }
     }
 
-    if (token) {
-      loadProfile(token);
-    }
-  }, [token, router]);
+    if (!token) return;
 
-  async function loadProfile(authToken: string) {
-    setLoading(true);
-    try {
-      const data = await api<ProfileResponse>('/profile/me', { token: authToken });
-      if (data) {
-        setNickname(data.nickname || '');
-        setCity(data.city || '');
-        setDescription(data.description || '');
-        setSelectedInterests(Array.isArray(data.interests) ? data.interests : []);
-      }
-    } catch (err) {
-      setStatusMessage({
-        type: 'error',
-        text: err instanceof Error ? err.message : 'Failed to load profile.',
+    let isMounted = true;
+
+    api<ProfileResponse>('/profile/me', { token })
+      .then((data) => {
+        if (isMounted && data) {
+          setNickname(data.nickname || '');
+          setCity(data.city || '');
+          setDescription(data.description || '');
+          setSelectedInterests(Array.isArray(data.interests) ? data.interests : []);
+        }
+      })
+      .catch((err) => {
+        if (isMounted) {
+          setStatusMessage({
+            type: 'error',
+            text: err instanceof Error ? err.message : 'Failed to load profile.',
+          });
+        }
+      })
+      .finally(() => {
+        if (isMounted) {
+          setLoading(false);
+        }
       });
-    } finally {
-      setLoading(false);
-    }
-  }
+
+    return () => {
+      isMounted = false;
+    };
+  }, [token, router]);
 
   function toggleInterest(interestKey: string) {
     setSelectedInterests((prev) =>
