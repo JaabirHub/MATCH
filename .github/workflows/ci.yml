@@ -66,4 +66,7 @@ jobs:
         run: npm test       # adjust/remove if you don't have tests yet
 
       - name: Build
+        working-directory: ./frontend
+        env:
+          NEXT_PUBLIC_BACKEND_URL: http://localhost:3001
         run: npm run build

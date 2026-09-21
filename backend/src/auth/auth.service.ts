@@ -10,6 +10,7 @@ import { DataSource, Repository } from 'typeorm';
 import { RegisterDTO } from './dto/register.dto';
 import * as bcrypt from 'bcrypt';
 import { Profile } from 'src/profile/profile.entity';
+import { LoginDTO } from './dto/login.dto';
 
 @Injectable()
 export class AuthService {
@@ -55,7 +56,8 @@ export class AuthService {
     return user;
   }
 
-  login(user: User) {
+  async login(dto: LoginDTO) {
+    const user = await this.validateUser(dto.email, dto.password);
     return this.signTokens(user);
   }
 

@@ -11,6 +11,7 @@ import { ProfileModule } from './profile/profile.module';
 import { MatchingModule } from './matching/matching.module';
 import { ConnectionModule } from './connection/connection.module';
 import { Connection } from './connection/connection.entity';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { Connection } from './connection/connection.entity';
     ProfileModule,
     MatchingModule,
     ConnectionModule,
+    ChatModule,
   ],
   controllers: [AppController],
   providers: [AppService],
