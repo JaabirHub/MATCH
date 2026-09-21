@@ -79,7 +79,7 @@ export class MessageService {
   async markMessagesAsRead(
     conversationId: string,
     userId: string,
-  ): Promise<{message: string}> {
+  ): Promise<{ message: string }> {
     await this.getConversationForUser(conversationId, userId);
 
     await this.messageRepo
@@ -97,9 +97,9 @@ export class MessageService {
       .andWhere('read_at IS NULL')
       .execute();
 
-      return {
-        message: 'Messages marked as read',
-      }
+    return {
+      message: 'Messages marked as read',
+    };
   }
 
   private async getConversationForUser(

@@ -8,7 +8,6 @@ import {
 } from '@nestjs/common';
 import { RegisterDTO } from './dto/register.dto';
 import { AuthService } from './auth.service';
-import { AuthGuard } from '@nestjs/passport';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { Request as ExpressRequest } from 'express';
 import { User } from 'src/user/user.entity';
@@ -27,13 +26,9 @@ export class AuthController {
     return this.authService.register(dto);
   }
 
-  @UseGuards(AuthGuard('local'))
   @Post('login')
-  login(
-    @Request() req: RequestWithUser,
-    @Body() _dto: LoginDTO,
-  ) {
-    return this.authService.login(req.user);
+  login(@Body() dto: LoginDTO) {
+    return this.authService.login(dto);
   }
 
   @UseGuards(JwtAuthGuard)

@@ -1,24 +1,38 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useSyncExternalStore } from 'react';
 import { useRouter } from 'next/navigation';
+
+function subscribe() {
+  return () => {};
+}
+
+function getSessionToken() {
+  return sessionStorage.getItem('accessToken');
+}
+
+function getServerSnapshot() {
+  return null;
+}
 
 export default function DiscoverPage() {
   const router = useRouter();
-  const [token, setToken] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const token = useSyncExternalStore(
+    subscribe,
+    getSessionToken,
+    getServerSnapshot,
+  );
 
   useEffect(() => {
-    const savedToken = sessionStorage.getItem('accessToken');
-    if (!savedToken) {
-      router.push('/login');
-    } else {
-      setToken(savedToken);
-      setIsLoading(false);
+    if (token === null && typeof window !== 'undefined') {
+      const stored = sessionStorage.getItem('accessToken');
+      if (!stored) {
+        router.push('/login');
+      }
     }
-  }, [router]);
+  }, [token, router]);
 
-  if (isLoading || !token) {
+  if (!token) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-slate-950 text-white">
         <p className="text-slate-400">Loading discover feed...</p>
