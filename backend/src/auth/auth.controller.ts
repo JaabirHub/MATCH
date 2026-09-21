@@ -12,6 +12,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { Request as ExpressRequest } from 'express';
 import { User } from 'src/user/user.entity';
+import { LoginDTO } from './dto/login.dto';
 
 interface RequestWithUser extends ExpressRequest {
   user: User;
@@ -28,7 +29,10 @@ export class AuthController {
 
   @UseGuards(AuthGuard('local'))
   @Post('login')
-  login(@Request() req: RequestWithUser) {
+  login(
+    @Request() req: RequestWithUser,
+    @Body() dto: LoginDTO,
+  ) {
     return this.authService.login(req.user);
   }
 
