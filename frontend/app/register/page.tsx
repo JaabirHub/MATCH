@@ -3,8 +3,12 @@
 import Link from 'next/link';
 import { FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
-
 import { api } from '@/lib/api';
+
+interface AuthResponse {
+  accessToken: string;
+  refreshToken: string;
+}
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -17,25 +21,22 @@ export default function RegisterPage() {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-
     setError('');
     setIsSubmitting(true);
 
     try {
-      await api('/auth/register', {
+      const response = await api<AuthResponse>('/auth/register', {
         method: 'POST',
-        body: JSON.stringify({
-          name,
-          email,
-          password,
-        }),
+        body: JSON.stringify({ name, email, password }),
       });
 
-      router.push('/login');
-    } catch (error) {
+      // Store accessToken and jump straight to profile onboarding
+      sessionStorage.setItem('accessToken', response.accessToken);
+      router.push('/onboarding');
+    } catch (err) {
       setError(
-        error instanceof Error
-          ? error.message
+        err instanceof Error
+          ? err.message
           : 'Registration failed. Please try again.',
       );
     } finally {
@@ -53,20 +54,13 @@ export default function RegisterPage() {
           >
             Match
           </Link>
-
-          <h1 className="mt-6 text-3xl font-bold">
-            Create your account
-          </h1>
-
+          <h1 className="mt-6 text-3xl font-bold">Create your account</h1>
           <p className="mt-2 text-sm text-slate-400">
-            Join Match and start finding people with similar interests.
+            Join Match and set up your profile to start finding friends.
           </p>
         </div>
 
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-5"
-        >
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
             <label
               htmlFor="name"
@@ -74,18 +68,16 @@ export default function RegisterPage() {
             >
               Name
             </label>
-
             <input
               id="name"
               name="name"
               type="text"
               value={name}
-              onChange={(event) => setName(event.target.value)}
+              onChange={(e) => setName(e.target.value)}
               minLength={3}
               required
-              autoComplete="name"
               placeholder="Your name"
-              className="w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-white placeholder:text-slate-600 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20"
+              className="w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-white placeholder:text-slate-600 outline-none focus:border-indigo-500"
             />
           </div>
 
@@ -96,17 +88,15 @@ export default function RegisterPage() {
             >
               Email
             </label>
-
             <input
               id="email"
               name="email"
               type="email"
               value={email}
-              onChange={(event) => setEmail(event.target.value)}
+              onChange={(e) => setEmail(e.target.value)}
               required
-              autoComplete="email"
               placeholder="you@example.com"
-              className="w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-white placeholder:text-slate-600 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20"
+              className="w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-white placeholder:text-slate-600 outline-none focus:border-indigo-500"
             />
           </div>
 
@@ -117,30 +107,21 @@ export default function RegisterPage() {
             >
               Password
             </label>
-
             <input
               id="password"
               name="password"
               type="password"
               value={password}
-              onChange={(event) => setPassword(event.target.value)}
+              onChange={(e) => setPassword(e.target.value)}
               minLength={8}
               required
-              autoComplete="new-password"
               placeholder="At least 8 characters"
-              className="w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-white placeholder:text-slate-600 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20"
+              className="w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-white placeholder:text-slate-600 outline-none focus:border-indigo-500"
             />
-
-            <p className="mt-2 text-xs text-slate-500">
-              Your password must contain at least 8 characters.
-            </p>
           </div>
 
           {error && (
-            <div
-              role="alert"
-              className="rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300"
-            >
+            <div className="rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300">
               {error}
             </div>
           )}
@@ -148,18 +129,15 @@ export default function RegisterPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full rounded-lg bg-indigo-500 px-4 py-3 font-semibold text-white transition hover:bg-indigo-400 disabled:cursor-not-allowed disabled:opacity-50"
+            className="w-full rounded-lg bg-indigo-500 px-4 py-3 font-semibold text-white hover:bg-indigo-400 disabled:opacity-50"
           >
-            {isSubmitting ? 'Creating account...' : 'Create account'}
+            {isSubmitting ? 'Creating account...' : 'Continue to Profile Setup'}
           </button>
         </form>
 
         <p className="mt-6 text-center text-sm text-slate-400">
           Already have an account?{' '}
-          <Link
-            href="/login"
-            className="font-medium text-indigo-400 transition hover:text-indigo-300"
-          >
+          <Link href="/login" className="font-medium text-indigo-400 hover:text-indigo-300">
             Log in
           </Link>
         </p>
