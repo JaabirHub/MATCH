@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 
 export default function DiscoverPage() {
   const router = useRouter();
   const [token, setToken] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const savedToken = sessionStorage.getItem('accessToken');
@@ -14,13 +14,14 @@ export default function DiscoverPage() {
       router.push('/login');
     } else {
       setToken(savedToken);
+      setIsLoading(false);
     }
   }, [router]);
 
-  if (!token) {
+  if (isLoading || !token) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-slate-950 text-white">
-        <p className="text-slate-400">Checking authentication...</p>
+        <p className="text-slate-400">Loading discover feed...</p>
       </main>
     );
   }

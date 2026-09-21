@@ -31,7 +31,7 @@ export class AuthController {
   @Post('login')
   login(
     @Request() req: RequestWithUser,
-    @Body() dto: LoginDTO,
+    @Body() _dto: LoginDTO,
   ) {
     return this.authService.login(req.user);
   }
