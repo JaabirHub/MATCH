@@ -12,6 +12,8 @@ import { MatchingModule } from './matching/matching.module';
 import { ConnectionModule } from './connection/connection.module';
 import { Connection } from './connection/connection.entity';
 import { ChatModule } from './chat/chat.module';
+import { Conversation } from './chat/conversation/conversation.entity';
+import { Message } from './chat/message/message.entity';
 
 @Module({
   imports: [
@@ -26,7 +28,7 @@ import { ChatModule } from './chat/chat.module';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [User, Profile, Connection],
+      entities: [User, Profile, Connection, Conversation, Message],
       synchronize: true,
     }),
     UserModule,

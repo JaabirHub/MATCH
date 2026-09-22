@@ -29,7 +29,8 @@ export class MatchingService {
         .filter(
           (connection) =>
             connection.connectionStatus === ConnectionStatus.ACCEPTED ||
-            connection.connectionStatus === ConnectionStatus.PENDING,
+            connection.connectionStatus === ConnectionStatus.PENDING ||
+            connection.connectionStatus === ConnectionStatus.BLOCKED,
         )
         .map((connection) =>
           connection.sender.id === userId

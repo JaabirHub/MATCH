@@ -1,5 +1,6 @@
 import {
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -52,5 +53,20 @@ export class ConnectionController {
   @Get('requests')
   getPendingRequests(@Request() req: RequestWithUser) {
     return this.connectionService.getPendingRequests(req.user.id);
+  }
+
+  @Patch(':id/unblock')
+  unblockUser(@Request() req: RequestWithUser, @Param('id') id: string) {
+    return this.connectionService.unblockUser(req.user.id, id);
+  }
+
+  @Delete(':id')
+  removeConnection(@Request() req: RequestWithUser, @Param('id') id: string) {
+    return this.connectionService.removeConnection(req.user.id, id);
+  }
+
+  @Get('blocked')
+  getBlockedConnections(@Request() req: RequestWithUser) {
+    return this.connectionService.getBlockedConnections(req.user.id);
   }
 }
