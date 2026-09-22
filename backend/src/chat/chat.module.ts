@@ -7,10 +7,11 @@ import { ConversationController } from './conversation/conversation.controller';
 import { Message } from './message/message.entity';
 import { MessageService } from './message/message.service';
 import { MessageController } from './message/message.controller';
+import { Connection } from 'src/connection/connection.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Conversation, Message]),
+    TypeOrmModule.forFeature([Conversation, Connection, Message]),
     ConnectionModule,
   ],
   controllers: [ConversationController, MessageController],
